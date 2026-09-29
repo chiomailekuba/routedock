@@ -119,3 +119,25 @@ console.log('✓ Nulth ZK vault SDK integration PASSED')
   console.log('✓ prepareNulthSigner fails closed for missing/misspelled network')
 }
 
+{
+  const vaultWithExpiry = {
+    ...vault,
+    expiryLedger: 10,
+  }
+  const { signer } = await prepareNulthSigner(
+    vaultWithExpiry,
+    baseManifest,
+    'x402',
+    'testnet',
+    Number.NaN,
+  )
+  await assert.rejects(
+    () =>
+      signer.signAuthEntry(
+        Buffer.from('route-dock-auth-entry').toString('base64'),
+      ),
+    RangeError,
+  )
+  console.log('✓ prepareNulthSigner rejects NaN ledger on signing with RangeError')
+}
+

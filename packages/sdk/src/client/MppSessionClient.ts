@@ -30,6 +30,7 @@ import {
   RouteDockDisputeError,
   httpStatusToError,
   wrapFetchError,
+  wrapMppError,
 } from '../errors.js'
 import { withRetry, type RetryPolicy } from '../internal/retry.js'
 import { usdcToStroops } from '../internal/usdc.js'
@@ -468,7 +469,7 @@ export class MppSessionClient {
             try {
               resp = await mppx.fetch(url)
             } catch (err) {
-              throw wrapFetchError(err, 'Voucher request')
+              throw wrapMppError(err, 'Voucher request')
             }
             if (!resp.ok) {
               if (resp.status >= 500 || resp.status === 429 || resp.status === 503) {
@@ -885,7 +886,7 @@ export class MppSessionClient {
       )
       onSigned?.()
     } catch (err) {
-      throw wrapFetchError(err, 'Voucher credential')
+      throw wrapMppError(err, 'Voucher credential')
     }
 
     // ── 3: upgrade the HTTP connection to WebSocket ─────────────────────────
